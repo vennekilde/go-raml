@@ -34,6 +34,9 @@ func newFieldDef(apiDef *raml.APIDefinition, structName string, prop raml.Proper
 		// check if it is a recursive type
 		if titledType == strings.Title(structName) {
 			titledType = "*" + titledType // add `pointer`, otherwise compiler will complain
+		} else if prop.Required == false && prop.IsArray() == false {
+			// prop is non-required. To allow the prop to be empty, the prop is set as a pointer
+			titledType = "*" + titledType // add `pointer`, otherwise the struct to json conversion will include the empty struct
 		}
 
 		// use strings.Replace instead of simple assignment because the fieldType
